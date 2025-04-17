@@ -12,7 +12,7 @@ const GoldTradingView = () => {
             if ((window as any).TradingView) {
                 new (window as any).TradingView.widget({
                     width: "100%",
-                    height: 500,
+                    height: "550",
                     symbol: "OANDA:XAUUSD",
                     interval: "60",
                     timezone: "Asia/Bangkok", // GMT+7
