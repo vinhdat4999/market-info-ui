@@ -8,6 +8,18 @@
   .table {
     width: 60%;
   }
+
+  .freq-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      font-style: italic;
+      margin-left: 50px;
+      margin-right: 10px;
+    }
+  }
 }
 
 .table :global {
@@ -28,5 +40,20 @@
 
   .ant-table-cell {
     color: #a17c3f !important;
+  }
+}
+
+.input-number-dark {
+  background-color: #1e1e1e;
+  border: 1px solid #a17c3f;
+  border-radius: 4px;
+
+  input {
+    background-color: transparent;
+    color: #a17c3f !important;
+  }
+
+  .ant-input-number-handler-wrap {
+    background-color: #333;
   }
 }

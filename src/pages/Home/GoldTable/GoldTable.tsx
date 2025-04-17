@@ -1,22 +1,22 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {useEffect, useMemo, useRef, useState} from "react";
 import styles from "./GoldTable.module.scss";
-import { Table, InputNumber } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { getMarketDataState } from "../../../redux-toolkit/market-info/marketInfoSelector";
-import { getMarketInfo } from "../../../redux-toolkit/market-info/marketInfoThunk";
-import { DOJI_RING_DATA, SJC_1L_DATA, SJC_RING_DATA } from "../../../constants/common";
+import {InputNumber, Table} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {getMarketDataState} from "../../../redux-toolkit/market-info/marketInfoSelector";
+import {getMarketInfo} from "../../../redux-toolkit/market-info/marketInfoThunk";
+import {DOJI_RING_DATA, SJC_1L_DATA, SJC_RING_DATA} from "../../../constants/common";
 
 const columns = [
-    { title: 'Loại vàng', dataIndex: 'name', key: 'name' },
-    { title: 'Thời gian cập nhật', dataIndex: 'updatedTime', key: 'updatedTime' },
-    { title: 'Giá mua', dataIndex: 'buy', key: 'buy' },
-    { title: 'Giá bán', dataIndex: 'sell', key: 'sell' },
+    {title: 'Loại vàng', dataIndex: 'name', key: 'name'},
+    {title: 'Thời gian cập nhật', dataIndex: 'updatedTime', key: 'updatedTime'},
+    {title: 'Giá mua', dataIndex: 'buy', key: 'buy'},
+    {title: 'Giá bán', dataIndex: 'sell', key: 'sell'},
 ];
 
 const GoldPriceTable: React.FC = React.memo(() => {
     const dispatch = useDispatch();
     const marketInfo = useSelector(getMarketDataState);
-    const [intervalMs, setIntervalMs] = useState<number>(60000);
+    const [intervalMs, setIntervalMs] = useState<number>(60);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -28,12 +28,12 @@ const GoldPriceTable: React.FC = React.memo(() => {
         intervalRef.current = setInterval(() => {
             // @ts-ignore
             dispatch(getMarketInfo());
-        }, intervalMs);
+        }, intervalMs * 1000);
 
         return () => {
             if (intervalRef.current) clearInterval(intervalRef.current);
         };
-    }, [dispatch, intervalMs]);
+    }, [dispatch, intervalMs * 1000]);
 
     const lastUpdatedTime = marketInfo?.source?.generatedTime;
 
@@ -81,13 +81,14 @@ const GoldPriceTable: React.FC = React.memo(() => {
 
     return (
         <div className={styles["wrapper"]}>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
                 <h2>Cập nhật lần cuối: {lastUpdatedTime}</h2>
-                <div>
-                    Tần suất cập nhật (ms):{" "}
+                <div className={styles["freq-panel"]}>
+                    <p>Tần suất cập nhật (s):{" "}</p>
                     <InputNumber
-                        min={1000}
-                        step={1000}
+                        className={styles["input-number-dark"]}
+                        min={1}
+                        step={1}
                         value={intervalMs}
                         onChange={(value) => value && setIntervalMs(value)}
                     />
