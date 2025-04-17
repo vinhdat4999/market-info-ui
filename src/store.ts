@@ -1,17 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {userSlice} from './redux-toolkit/user/userSlice';
-import {productSlice} from "./redux-toolkit/product/productSlice";
-import {orderSlice} from "./redux-toolkit/order/orderSlice";
-import {cartSlice} from "./redux-toolkit/cart/cartSlice";
-import {customerSlice} from "./redux-toolkit/customer/customerSlice";
+import {marketInfoSlice} from "./redux-toolkit/market-info/marketInfoSlice";
 
 
 export const storeReducer = {
-    user: userSlice.reducer,
-    product: productSlice.reducer,
-    order: orderSlice.reducer,
-    cart: cartSlice.reducer,
-    customer: customerSlice.reducer,
+    marketInfo: marketInfoSlice.reducer,
 };
 
 export const store = configureStore({

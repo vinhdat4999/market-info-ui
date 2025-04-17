@@ -1,5 +1,5 @@
 import {RootState} from "../../store";
 
-export const getCartUserState = (state: RootState) => state.cart;
-export const getCartItemsState = (state: RootState) => getCartUserState(state).cartItems;
-export const getValidCoinUseState = (state: RootState) => getCartUserState(state).validCoinUse;
+export const getMarketInfoState = (state: RootState) => state.marketInfo;
+export const getIsLoadingState = (state: RootState) => getMarketInfoState(state).isLoading;
+export const getMarketDataState = (state: RootState) => getMarketInfoState(state).data;

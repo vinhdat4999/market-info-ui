@@ -1,57 +1,25 @@
 import {createSlice} from '@reduxjs/toolkit';
+import {getMarketInfo} from "./marketInfoThunk";
 
 export const initialState: any = {
-    cartItems: JSON.parse(localStorage.getItem('cart') ?? '[]'),
-    quantityInCart: 0,
-    validCoinUse: 0,
+    isLoading: false,
+    data: {},
 };
 
-export interface CartItem {
-    productId: string;
-    quantityInCart: number;
-    validCoinUse: number;
-}
-
-const saveCartToLocalStorage = (cart: CartItem[]): void => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-};
-
-export const cartSlice = createSlice({
-    name: 'cart',
+export const marketInfoSlice = createSlice({
+    name: 'marketInfo',
     initialState,
-    reducers: {
-        setValidCoinUse(state, payload: any) {
-            state.validCoinUse = payload.payload;
-            saveCartToLocalStorage(state.cartItems);
-        },
-        clearCart(state) {
-            state.cartItems = [];
-            state.validCoinUse = 0;
-            saveCartToLocalStorage(state.cartItems);
-        },
-        removeCartItem(state, payload: any): void {
-            const productId = payload.payload.productId;
-            state.validCoinUse = 0;
-            state.cartItems = state.cartItems.filter((item: CartItem) => item.productId !== productId);
-            saveCartToLocalStorage(state.cartItems);
-        },
-        addCartItem(state, payload): void {
-            const productId = payload.payload.productId;
-            const quantityInCart = payload.payload.quantity;
-
-            const existingItem = state.cartItems.find((item: CartItem) => item.productId === productId);
-
-            if (existingItem) {
-                existingItem.quantityInCart += quantityInCart;
-            } else {
-                state.cartItems.push({productId, quantityInCart});
-            }
-            saveCartToLocalStorage(state.cartItems);
-        },
-    },
+    reducers: {},
     extraReducers: (builder): void => {
+        builder.addCase(getMarketInfo.pending, (state) => {
+            state.isLoading = true;
+        });
+        builder.addCase(getMarketInfo.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data = action.payload.data;
+        });
+        builder.addCase(getMarketInfo.rejected, (state) => {
+            state.isLoading = false;
+        });
     },
 });
-
-export const {setValidCoinUse, clearCart, removeCartItem, addCartItem} = cartSlice.actions;
-export default cartSlice.reducer;
