@@ -47,13 +47,27 @@
   background-color: #1e1e1e;
   border: 1px solid #a17c3f;
   border-radius: 4px;
+  transition: all 0.2s ease;
 
   input {
     background-color: transparent;
     color: #a17c3f !important;
+    border: none;
+    outline: none;
   }
 
   .ant-input-number-handler-wrap {
     background-color: #333;
+  }
+
+  &:hover,
+  &:focus-within {
+    background-color: #1e1e1e;
+    border-color: #ffc107; // gold-like highlight
+    box-shadow: 0 0 4px 1px rgba(255, 193, 7, 0.4);
+  }
+
+  input:focus {
+    color: #ffd700 !important; // brighter when typing
   }
 }
