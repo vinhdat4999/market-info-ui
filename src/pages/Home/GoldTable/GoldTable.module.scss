@@ -1,0 +1,50 @@
+//.tradingview-widget-container {
+//  user-select: none;
+//  box-sizing: border-box;
+//  display: block;
+//  height: 100%;
+//  width: 100%;
+//  padding-right: 10px;
+//}
+//
+//.spin {
+//  display: flex;
+//  justify-content: center;
+//  margin-top: 100px;
+//}
+//
+//
+//.gold-title {
+//  font-size: 15px;
+//  font-weight: 600;
+//  margin-bottom: 10px;
+//  padding-top: 10px;
+//  padding-left: 10px;
+//  border-top: 1px solid #f2f2f2;
+//}
+//
+//.disable-iframe {
+//  position: relative;
+//}
+//
+//.disable-iframe::after {
+//  content: "";
+//  position: absolute;
+//  top: 0;
+//  left: 0;
+//  width: 100%;
+//  height: 100%;
+//  z-index: 2;
+//}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20px;
+
+  .table {
+    width: 30%;
+  }
+}
