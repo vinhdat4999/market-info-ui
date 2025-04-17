@@ -1,42 +1,3 @@
-//.tradingview-widget-container {
-//  user-select: none;
-//  box-sizing: border-box;
-//  display: block;
-//  height: 100%;
-//  width: 100%;
-//  padding-right: 10px;
-//}
-//
-//.spin {
-//  display: flex;
-//  justify-content: center;
-//  margin-top: 100px;
-//}
-//
-//
-//.gold-title {
-//  font-size: 15px;
-//  font-weight: 600;
-//  margin-bottom: 10px;
-//  padding-top: 10px;
-//  padding-left: 10px;
-//  border-top: 1px solid #f2f2f2;
-//}
-//
-//.disable-iframe {
-//  position: relative;
-//}
-//
-//.disable-iframe::after {
-//  content: "";
-//  position: absolute;
-//  top: 0;
-//  left: 0;
-//  width: 100%;
-//  height: 100%;
-//  z-index: 2;
-//}
-
 .wrapper {
   display: flex;
   justify-content: center;
@@ -45,6 +6,68 @@
   margin-top: 20px;
 
   .table {
-    width: 30%;
+    width: 60%;
+  }
+
+  .freq-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    p {
+      font-style: italic;
+      margin-left: 50px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.table :global {
+  .ant-table {
+    background-color: #000 !important;
+    color: #a17c3f !important;
+  }
+
+  .ant-table-thead > tr > th {
+    background-color: #111 !important;
+    color: #a17c3f !important;
+  }
+
+  .ant-table-tbody > tr > td {
+    background-color: #000 !important;
+    color: #a17c3f !important;
+  }
+
+  .ant-table-cell {
+    color: #a17c3f !important;
+  }
+}
+
+.input-number-dark {
+  background-color: #1e1e1e;
+  border: 1px solid #a17c3f;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  input {
+    background-color: transparent;
+    color: #a17c3f !important;
+    border: none;
+    outline: none;
+  }
+
+  .ant-input-number-handler-wrap {
+    background-color: #333;
+  }
+
+  &:hover,
+  &:focus-within {
+    background-color: #1e1e1e;
+    border-color: #ffc107; // gold-like highlight
+    box-shadow: 0 0 4px 1px rgba(255, 193, 7, 0.4);
+  }
+
+  input:focus {
+    color: #ffd700 !important; // brighter when typing
   }
 }
