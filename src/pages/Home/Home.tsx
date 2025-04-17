@@ -1,99 +1,79 @@
-import React, {useEffect, useState} from "react";
-import LayoutWrapper from "../../components/LayoutWrapper/LayoutWrapper";
+import React, {useEffect, useMemo} from "react";
 import styles from "./Home.module.scss";
-import {Col, Row, Select, Space, Spin} from "antd";
+import {Divider, Spin} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {selectIsLoadingState, selectProductsState} from "../../redux-toolkit/product/productSelector";
-import {getAllProducts} from "../../redux-toolkit/product/productThunk";
-import Product from "../../components/Product/Product";
-import Cart from "./Cart/Cart";
-
-const {Option} = Select;
+import {getMarketInfo} from "../../redux-toolkit/market-info/marketInfoThunk";
+import {getIsLoadingState, getMarketDataState} from "../../redux-toolkit/market-info/marketInfoSelector";
+import GoldTradingView from "../../components/GoldTradingView/GoldTradingView";
+import GoldPriceTable from "./GoldTable/GoldTable";
 
 function Home(): React.JSX.Element {
     const dispatch: any = useDispatch();
-    const products: any = useSelector(selectProductsState);
-    const [filteredProducts, setFilteredProducts] = useState(products);
-    const [filter, setFilter] = useState<string>("default");
-    const isLoading = useSelector(selectIsLoadingState);
+    const isLoading = useSelector(getIsLoadingState);
+    const marketInfo: any = useSelector(getMarketDataState);
 
     useEffect(() => {
-        if (products.length === 0) {
-            // Only fetch if there are no products in Redux store
-            dispatch(getAllProducts());
-        }
-    }, [dispatch, products.length]);
+        dispatch(getMarketInfo());
+        const interval = setInterval(() => {
+            dispatch(getMarketInfo());
+        }, 50000);
+        return () => clearInterval(interval);
+    }, [dispatch]);
 
-    useEffect(() => {
-        applyFilter(filter);
-    }, [products, filter]);
+    const dataSource = useMemo(() => {
+        const sjcData = marketInfo?.goldData?.SJC;
+        const sjcUpdatedTime = sjcData?.updatedTime;
+        const sjc1LData = sjcData?.data["Vàng SJC 1L, 10L, 1KG"];
+        const sjc1LBuy = sjc1LData?.buy;
+        const sjc1LSell = sjc1LData?.sell;
 
-    const applyFilter = (criteria: string) => {
-        switch (criteria) {
-            case "best-seller":
-                setFilteredProducts([...products]?.sort((a: any, b: any) => b.soldNumber - a.soldNumber));
-                break;
-            case "price-asc":
-                setFilteredProducts([...products]?.sort((a: any, b: any) => a.price - b.price));
-                break;
-            case "price-desc":
-                setFilteredProducts([...products]?.sort((a: any, b: any) => b.price - a.price));
-                break;
-            case "discount":
-                setFilteredProducts([...products]?.sort((a: any, b: any) => b.discount - a.discount));
-                break;
-            default:
-                setFilteredProducts(products);
-        }
-    };
+        const sjcRingData = sjcData?.data["Vàng nhẫn SJC 99,99% 1 chỉ, 2 chỉ, 5 chỉ"];
+        const sjcRingBuy = sjcRingData?.buy;
+        const sjcRingSell = sjcRingData?.sell;
 
-    const handleFilterChange = (value: string) => {
-        setFilter(value);
-    };
+        const dojiData = marketInfo?.goldData?.DOJI;
+        const dojiUpdatedTime = dojiData?.updatedTime;
+        const dojiRingData = dojiData?.data["nhanhung1chi"];
+        const dojiRingBuy = dojiRingData?.buy;
+        const dojiRingSell = dojiRingData?.sell;
+
+        return [
+            {
+                key: '1',
+                name: 'SJC vàng miếng',
+                updatedTime: sjcUpdatedTime,
+                buy: sjc1LBuy,
+                sell: sjc1LSell,
+            },
+            {
+                key: '2',
+                name: 'SJC vàng nhẫn',
+                updatedTime: sjcUpdatedTime,
+                buy: sjcRingBuy,
+                sell: sjcRingSell,
+            },
+            {
+                key: '3',
+                name: 'DOJI nhẫn Hưng Thịnh Vượng',
+                updatedTime: dojiUpdatedTime,
+                buy: dojiRingBuy,
+                sell: dojiRingSell,
+            },
+        ];
+    }, [marketInfo]);
 
     return (
-        <LayoutWrapper>
-            {isLoading ?
-                (
-                    <Spin className={styles["spin"]} size={"large"}/>
-                ) :
-                (
-                    <Row gutter={[16, 16]}>
-                        <Col xs={24} sm={24} md={17} className={styles["border-right"]}>
-                            <Row justify="end" className={styles["filter-row"]} style={{marginBottom: 16}}>
-                                <Select defaultValue="default" className={styles["sort"]} onChange={handleFilterChange}>
-                                    <Option value="default">Mặc định</Option>
-                                    <Option value="best-seller">Bán chạy</Option>
-                                    <Option value="price-asc">Giá thấp</Option>
-                                    <Option value="price-desc">Giá cao</Option>
-                                    <Option value="discount">Giảm giá nhiều</Option>
-                                </Select>
-                            </Row>
-
-                            <Row gutter={[16, 16]} className={styles["product-list"]}>
-                                {filteredProducts?.map((product: any) => (
-                                    <Col key={product.id} xs={12} sm={12} md={8} lg={6} xl={4}>
-                                        <Space style={{overflow: "hidden"}}>
-                                            <Product
-                                                key={product.id}
-                                                productId={product.productId}
-                                                name={product.name}
-                                                thumbnailPath={product.thumbnailPath}
-                                                price={product.price}
-                                                discount={product.discount}
-                                            />
-                                        </Space>
-                                    </Col>
-                                ))}
-                            </Row>
-                        </Col>
-
-                        <Col xs={24} sm={24} md={7} className={styles["cart-container"]}>
-                            <Cart allProducts={products}/>
-                        </Col>
-                    </Row>
-                )}
-        </LayoutWrapper>
+        <>
+            {isLoading ? (
+                <Spin className={styles["spin"]} size={"large"}/>
+            ) : (
+                <>
+                    <GoldTradingView/>
+                    <Divider/>
+                    <GoldPriceTable dataSource={dataSource}/>
+                </>
+            )}
+        </>
     );
 }
 
