@@ -9,7 +9,7 @@ export const getMarketInfo = createAsyncThunk(
             return await requestService.get(MARKET_INFO_URL, false);
         } catch (error: any) {
             if (error.response) {
-                return rejectWithValue(error.response.data);
+                return rejectWithValue('Xảy ra lỗi khi lấy dữ liệu');
             }
             throw error;
         }
