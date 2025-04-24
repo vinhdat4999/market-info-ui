@@ -4,6 +4,7 @@ import {getMarketInfo} from "./marketInfoThunk";
 export const initialState: any = {
     isLoading: false,
     data: {},
+    error: '',
 };
 
 export const marketInfoSlice = createSlice({
@@ -17,9 +18,11 @@ export const marketInfoSlice = createSlice({
         builder.addCase(getMarketInfo.fulfilled, (state, action) => {
             state.isLoading = false;
             state.data = action.payload.data;
+            state.error = null;
         });
-        builder.addCase(getMarketInfo.rejected, (state) => {
+        builder.addCase(getMarketInfo.rejected, (state, action) => {
             state.isLoading = false;
+            state.error = action.payload || 'Xảy ra lỗi khi lấy dữ liệu';
         });
     },
 });

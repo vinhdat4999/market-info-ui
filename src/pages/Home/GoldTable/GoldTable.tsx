@@ -2,7 +2,11 @@ import React, {useEffect, useMemo, useRef, useState} from "react";
 import styles from "./GoldTable.module.scss";
 import {InputNumber, Table} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {getMarketDataState} from "../../../redux-toolkit/market-info/marketInfoSelector";
+import {
+    getErrorState,
+    getIsLoadingState,
+    getMarketDataState
+} from "../../../redux-toolkit/market-info/marketInfoSelector";
 import {getMarketInfo} from "../../../redux-toolkit/market-info/marketInfoThunk";
 import {DOJI_RING_DATA, SJC_1L_DATA, SJC_RING_DATA,} from "../../../constants/common";
 import DiffPrice from "./UpdateTime/DiffPrice/DiffPrice";
@@ -18,6 +22,7 @@ const columns = [
 const GoldPriceTable: React.FC = React.memo(() => {
     const dispatch = useDispatch();
     const marketInfo = useSelector(getMarketDataState);
+    const error = useSelector(getErrorState);
     const [intervalMs, setIntervalMs] = useState<number>(60);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -88,11 +93,11 @@ const GoldPriceTable: React.FC = React.memo(() => {
     return (
         <div className={styles["wrapper"]}>
             <div style={{display: "flex", alignItems: "center", gap: "1rem"}}>
-                <h2 style={{display:"contents"}}>
+                <h2 style={{display: "contents"}}>
                     <Clock/>
-                    <span style={{marginLeft:"100px"}}>
-                        Cập nhật lần cuối: {lastUpdatedTime}
-                    </span>
+                    <span style={{marginLeft: "100px"}}>
+                    Cập nhật lần cuối: {lastUpdatedTime}
+                </span>
                 </h2>
                 <div className={styles["freq-panel"]}>
                     <p>Tần suất cập nhật (s):{" "}</p>
@@ -104,6 +109,12 @@ const GoldPriceTable: React.FC = React.memo(() => {
                         onChange={(value) => value && setIntervalMs(value)}
                     />
                 </div>
+
+                {error && (
+                    <h2 style={{color: 'red', fontWeight: 'bold', marginLeft: '1rem'}}>
+                        {error}
+                    </h2>
+                )}
             </div>
 
             <Table
